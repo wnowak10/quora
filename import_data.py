@@ -27,8 +27,8 @@ df_test = pd.read_csv('test.csv.zip',
 # full_df_test = pd.read_csv('../input/train.csv')
 
 np.random.seed(1234)
-# df_train = df_train.sample(1000)
-# df_test = df_test.sample(1000)
+df_train = df_train.sample(1000)
+df_test = df_test.sample(1000)
 
 
-print('head of df_test?', df_test.head())
+# print('head of df_test?', df_test.head())
