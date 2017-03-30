@@ -1,12 +1,41 @@
 import pandas as pd
-from create_features import *
+# from create_features import *
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
 import numpy as np
 
+df_train = pd.read_csv('df_train.csv',
+						header=0,
+						sep=',',
+						quotechar='"')
 
-x_train = df_train.drop(['question1', 'question2','q1words','q2words','id','qid1','qid2','is_duplicate'], axis=1)
-x_test = df_test.drop(['question1', 'question2','q1words','q2words','test_id',], axis=1)
+# df_test = pd.read_csv('df_test.csv',
+# 						header=0,
+# 						sep=',',
+# 						quotechar='"')
+
+
+print(df_train.head())
+
+x_train = df_train.drop(['question1',
+						 'question2',
+						 'cleaned_question1',
+						 'cleaned_question2',
+						 'q1words',
+						 'q2words',
+						 'id',
+						 'qid1',
+						 'qid2',
+						 'is_duplicate'], 
+						  axis=1)
+x_test = df_test.drop(['question1',
+					   'question2',
+					   'cleaned_question1',
+					   'cleaned_question2',
+					   'q1words',
+					   'q2words',
+					   'test_id',],
+					    axis=1)
 # x_train = df_train.iloc[:, [6, 7, 10, 11, 12, 13, 14, 15]]
 # x_test = df_test.iloc[:, [3, 4, 7, 8, 9, 10, 11, 12]]
 y_train = df_train['is_duplicate'].values
@@ -48,7 +77,7 @@ d_valid = xgb.DMatrix(x_valid, label=y_valid)
 
 watchlist = [(d_train, 'train'), (d_valid, 'valid')]
 
-bst = xgb.train(params, d_train, 5, watchlist, early_stopping_rounds=50, verbose_eval=10)
+bst = xgb.train(params, d_train, 10, watchlist, early_stopping_rounds=50, verbose_eval=10)
 
 
 d_test = xgb.DMatrix(x_test)
