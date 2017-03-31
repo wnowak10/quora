@@ -1,5 +1,5 @@
 from process import df_train
-# from process import df_test
+from process import df_test
 from process import apply_and_add_function
 
 # from import_data import df_train
@@ -8,12 +8,14 @@ from process import apply_and_add_function
 import pandas as pd
 import numpy as np
 from nltk.corpus import stopwords
-from nltk.tokenize import wordpunct_tokenize
+# from nltk.tokenize import wordpunct_tokenize
+import nltk
+
 from tqdm import tqdm
 
-from itertools import chain
-from sklearn.feature_extraction.text import TfidfVectorizer
-from itertools import compress
+# from itertools import chain
+# from sklearn.feature_extraction.text import TfidfVectorizer
+# from itertools import compress
 from collections import Counter
 import warnings
 
@@ -34,7 +36,10 @@ def word_count(row):
     '''
     split each string and return length
     '''
-    l=len(row)
+    try:
+        l=len(row)
+    except:
+        l=0
     # l = len(str(row).split())
     return l
 
@@ -48,13 +53,13 @@ df_train = apply_and_add_function(df_train,
                                   'q2 word count')
 
 
-# tqdm.pandas()
-# df_test = apply_and_add_function(df_test,
-#                                  word_count,
-#                                  'question1',
-#                                  'question2',
-#                                  'q1 word count',
-#                                  'q2 word count')
+tqdm.pandas()
+df_test = apply_and_add_function(df_test,
+                                 word_count,
+                                 'question1',
+                                 'question2',
+                                 'q1 word count',
+                                 'q2 word count')
 
 print('completed function 1 for train and test')
 
@@ -88,10 +93,10 @@ def word_match_share(row):
     return R
 
 df_train['word_match_share'] = df_train.progress_apply(word_match_share, axis=1)
-# df_test['word_match_share'] = df_test.progress_apply(word_match_share, axis=1)
+df_test['word_match_share'] = df_test.progress_apply(word_match_share, axis=1)
 
 
-# print('completed function 3 for train and test')
+print('completed function 3 for train and test')
 
 
 
@@ -114,10 +119,10 @@ def how_match(row):
 
 tqdm.pandas()
 df_train['how match?'] = df_train.progress_apply(how_match, axis=1)
-# # tqdm.pandas()
-# df_test['how match?'] = df_test.progress_apply(how_match, axis=1)
+tqdm.pandas()
+df_test['how match?'] = df_test.progress_apply(how_match, axis=1)
 
-# print('completed function 5 for train and test')
+print('completed function 5 for train and test')
 
 ############################
 ####### Feature 4. ######## 
@@ -138,11 +143,11 @@ def what_match(row):
 
 tqdm.pandas()
 df_train['what match?'] = df_train.progress_apply(what_match, axis=1)
-# # # tqdm.pandas()
-# # df_test['what match?'] = df_test.progress_apply(what_match, axis=1)
+tqdm.pandas()
+df_test['what match?'] = df_test.progress_apply(what_match, axis=1)
 
 
-# # print('completed function 6 for train and test')
+print('completed function 6 for train and test')
 
 ############################
 ####### Feature 5. ######## 
@@ -162,14 +167,14 @@ def where_match(row):
 
 tqdm.pandas()
 df_train['where match?'] = df_train.progress_apply(where_match, axis=1)
-# # df_test['where match?'] = df_test.progress_apply(where_match, axis=1)
+df_test['where match?'] = df_test.progress_apply(where_match, axis=1)
 
 
 print('completed function 5 for train and test')
 
-# ############################
-# ####### Feature 6. ######## 
-# ############################
+############################
+####### Feature 6. ######## 
+############################
 
 
 def why_match(row):
@@ -185,9 +190,10 @@ def why_match(row):
 
 tqdm.pandas()
 df_train['why match?'] = df_train.progress_apply(why_match, axis=1)
-# # df_test['why match?'] = df_test.progress_apply(why_match, axis=1)
+tqdm.pandas()
+df_test['why match?'] = df_test.progress_apply(why_match, axis=1)
 
-# # print('completed function 8 for train and test')
+print('completed function 8 for train and test')
 
 
 ############################
@@ -199,7 +205,7 @@ df_train['why match?'] = df_train.progress_apply(why_match, axis=1)
 train_qs = pd.Series(df_train['question1'].tolist() +
                      df_train['question2'].tolist()).astype(str)
 # test_qs = pd.Series(df_test['question1'].tolist() +
-#                     df_test['question2'].tolist()).astype(str)
+                    # df_test['question2'].tolist()).astype(str)
 
 
 # If a word appears only once, we ignore it completely (likely a typo)
@@ -249,12 +255,51 @@ def tfidf_word_match_share(row):
 
 tqdm.pandas()
 df_train['td idf '] = df_train.progress_apply(tfidf_word_match_share, axis=1, raw=True)
-# tqdm.pandas()
-# df_test['td idf '] = df_test.progress_apply(tfidf_word_match_share, axis=1, raw=True)
+tqdm.pandas()
+df_test['td idf '] = df_test.progress_apply(tfidf_word_match_share, axis=1, raw=True)
 
 ############################
-####### Feature 8 - Spatial representation ######## 
+####### Feature 8 - Number of noun difference  ######## 
 ############################
+
+def shared_nouns(row):
+    try:
+        num_nouns_q1 = len([w for w, t in nltk.pos_tag(row['q1words']) if t[:1] in ['N']])
+        num_nouns_q2 = len([w for w, t in nltk.pos_tag(row['q2words']) if t[:1] in ['N']])
+        n_dif = np.abs(num_nouns_q1 - num_nouns_q2)
+    except:
+        n_dif = 0
+    return(n_dif)
+
+tqdm.pandas()
+df_train['num noun diff'] = df_train.progress_apply(shared_nouns, axis=1, raw=True)
+tqdm.pandas()
+df_test['num noun diff'] = df_test.progress_apply(shared_nouns, axis=1, raw=True)
+
+
+############################
+####### Feature 9 - Number of verb difference  ######## 
+############################
+
+
+def shared_verbs(row):
+    try:
+        num_verbs_q1 = len([w for w, t in nltk.pos_tag(row['q1words']) if t[:1] in ['V']])
+        num_verbs_q2 = len([w for w, t in nltk.pos_tag(row['q2words']) if t[:1] in ['V']])
+        v_dif = np.abs(num_verbs_q1 - num_verbs_q2)
+    except:
+        v_dif = 0
+    return(v_dif)
+
+
+tqdm.pandas()
+df_train['num verb diff'] = df_train.progress_apply(shared_verbs, 
+                                                    axis=1, 
+                                                    raw=True)
+tqdm.pandas()
+df_test['num verb diff'] = df_test.progress_apply(shared_verbs,
+                                                axis=1,
+                                                raw=True)
 
 
 ############################
@@ -266,6 +311,7 @@ print('creating features done! create features csv')
 df_train.to_csv('df_train.csv', index=False)
 df_test.to_csv('df_test.csv', index=False)
 
+print(df_train.head())
 
 # print('testcols', df_test.columns.values)
 print('traincols', df_train.columns.values)
