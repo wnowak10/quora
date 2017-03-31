@@ -262,42 +262,52 @@ df_test['td idf '] = df_test.progress_apply(tfidf_word_match_share, axis=1, raw=
 ####### Feature 8 - Number of noun difference  ######## 
 ############################
 
+warnings.filterwarnings("error")
+
+
 def shared_nouns(row):
     try:
+        # find # nouns in q1 and q2
         num_nouns_q1 = len([w for w, t in nltk.pos_tag(row['q1words']) if t[:1] in ['N']])
         num_nouns_q2 = len([w for w, t in nltk.pos_tag(row['q2words']) if t[:1] in ['N']])
+        # take abs of difference
         n_dif = np.abs(num_nouns_q1 - num_nouns_q2)
+        tot_nouns = num_nouns_q1 + num_nouns_q2
+        perc = n_dif / tot_nouns
     except:
-        n_dif = 0
-    return(n_dif)
+        perc = 0
+    return(perc)
 
 tqdm.pandas()
-df_train['num noun diff'] = df_train.progress_apply(shared_nouns, axis=1, raw=True)
+df_train['perc noun diff'] = df_train.progress_apply(shared_nouns, axis=1, raw=True)
 tqdm.pandas()
-df_test['num noun diff'] = df_test.progress_apply(shared_nouns, axis=1, raw=True)
+df_test['perc noun diff'] = df_test.progress_apply(shared_nouns, axis=1, raw=True)
 
 
 ############################
 ####### Feature 9 - Number of verb difference  ######## 
 ############################
 
+warnings.filterwarnings("error")
 
 def shared_verbs(row):
     try:
         num_verbs_q1 = len([w for w, t in nltk.pos_tag(row['q1words']) if t[:1] in ['V']])
         num_verbs_q2 = len([w for w, t in nltk.pos_tag(row['q2words']) if t[:1] in ['V']])
         v_dif = np.abs(num_verbs_q1 - num_verbs_q2)
+        verb_tot = num_verbs_q1 + num_verbs_q2 
+        perc_v = v_dif / verb_tot
     except:
-        v_dif = 0
-    return(v_dif)
+        perc_v = 0
+    return(perc_v)
 
 
 tqdm.pandas()
-df_train['num verb diff'] = df_train.progress_apply(shared_verbs, 
+df_train['percent verb diff'] = df_train.progress_apply(shared_verbs, 
                                                     axis=1, 
                                                     raw=True)
 tqdm.pandas()
-df_test['num verb diff'] = df_test.progress_apply(shared_verbs,
+df_test['percent verb diff'] = df_test.progress_apply(shared_verbs,
                                                 axis=1,
                                                 raw=True)
 
