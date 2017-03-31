@@ -1,13 +1,13 @@
 import pandas as pd
-# from create_features import *
+from create_features import *
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
 import numpy as np
 
-df_train = pd.read_csv('df_train.csv',
-						header=0,
-						sep=',',
-						quotechar='"')
+# df_train = pd.read_csv('df_train.csv',
+# 						header=0,
+# 						sep=',',
+# 						quotechar='"')
 
 # df_test = pd.read_csv('df_test.csv',
 # 						header=0,

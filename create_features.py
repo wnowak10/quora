@@ -7,9 +7,7 @@ import numpy as np
 from nltk.corpus import stopwords
 # from nltk.tokenize import wordpunct_tokenize
 import nltk
-
 from tqdm import tqdm
-
 # from itertools import chain
 # from sklearn.feature_extraction.text import TfidfVectorizer
 # from itertools import compress
@@ -23,11 +21,8 @@ print('imports finished')
 ############################
 ####### Feature 1. ######## 
 ############################
-
 # nltk.download("stopwords") # if i need to redownload
-
 print('finding word counts')
-# stops = set(stopwords.words("english"))
 
 
 def word_count_diff(row):
@@ -254,9 +249,11 @@ def shared_nouns(row):
         num_nouns_q1 = len([w for w, t in nltk.pos_tag(row['q1words']) if t[:1] in ['N']])
         num_nouns_q2 = len([w for w, t in nltk.pos_tag(row['q2words']) if t[:1] in ['N']])
         n_dif = np.abs(num_nouns_q1 - num_nouns_q2)
+        total_nouns = (num_nouns_q1 + num_nouns_q2)
+        frac = n_dif / total_nouns
     except:
-        n_dif = 0
-    return(n_dif)
+        frac = 0
+    return(frac)
 
 tqdm.pandas()
 df_train['num noun diff'] = df_train.progress_apply(shared_nouns, axis=1, raw=True)
@@ -274,9 +271,11 @@ def shared_verbs(row):
         num_verbs_q1 = len([w for w, t in nltk.pos_tag(row['q1words']) if t[:1] in ['V']])
         num_verbs_q2 = len([w for w, t in nltk.pos_tag(row['q2words']) if t[:1] in ['V']])
         v_dif = np.abs(num_verbs_q1 - num_verbs_q2)
+        total_verbs = (num_verbs_q1 + num_verbs_q2)
+        frac = v_dif / total_verbs
     except:
-        v_dif = 0
-    return(v_dif)
+        frac = 0
+    return(frac)
 
 
 tqdm.pandas()

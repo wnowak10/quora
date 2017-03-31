@@ -16,11 +16,11 @@ df_train = pd.read_csv('train.csv.zip',
 						quotechar='"')
 print('reading test set')
 
-# df_test = pd.read_csv('test.csv.zip',
-# 						compression='zip',
-# 						header=0,
-# 						sep=',',
-# 						quotechar='"')
+df_test = pd.read_csv('test.csv.zip',
+						compression='zip',
+						header=0,
+						sep=',',
+						quotechar='"')
 
 
 # read test and train from kaggle
@@ -29,7 +29,7 @@ print('reading test set')
 
 np.random.seed(1234)
 df_train = df_train.sample(1000)
-# df_test = df_test.sample(1000)
+df_test = df_test.sample(1000)
 
 
 # print('head of df_test?', df_test.head())

@@ -1,6 +1,6 @@
 
 from import_data import df_train
-# from import_data import df_test
+from import_data import df_test
 
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
@@ -134,13 +134,13 @@ df_train = apply_and_add_function(df_train,
                                   'cleaned_question1',
                                   'cleaned_question2')
 
-# tqdm.pandas()
-# df_test = apply_and_add_function(df_test,
-#                                   text_to_wordlist,
-#                                   'question1',
-#                                   'question2',
-#                                   'cleaned_question1',
-#                                   'cleaned_question2')
+tqdm.pandas()
+df_test = apply_and_add_function(df_test,
+                                  text_to_wordlist,
+                                  'question1',
+                                  'question2',
+                                  'cleaned_question1',
+                                  'cleaned_question2')
 
 cachedStopWords = stopwords.words("english")
 
@@ -168,11 +168,11 @@ df_train = apply_and_add_function(df_train,
 
 
 tqdm.pandas()
-# df_test = apply_and_add_function(df_test,
-#                                   return_words,
-#                                   'question1',
-#                                   'question2',
-#                                   'q1words',
-#                                   'q2words')
+df_test = apply_and_add_function(df_test,
+                                  return_words,
+                                  'question1',
+                                  'question2',
+                                  'q1words',
+                                  'q2words')
 
 print(df_train.head())
