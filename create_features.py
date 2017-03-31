@@ -2,9 +2,6 @@ from process import df_train
 from process import df_test
 from process import apply_and_add_function
 
-# from import_data import df_train
-# from import_data import df_test
-
 import pandas as pd
 import numpy as np
 from nltk.corpus import stopwords
@@ -30,39 +27,29 @@ print('imports finished')
 # nltk.download("stopwords") # if i need to redownload
 
 print('finding word counts')
-stops = set(stopwords.words("english"))
+# stops = set(stopwords.words("english"))
 
-def word_count(row):
+
+def word_count_diff(row):
     '''
     split each string and return length
     '''
     try:
-        l=len(row)
+        l1=len(row['q1words'])
+        l2=len(row['q2words'])
+        dl = np.abs(l1 - l2)
     except:
-        l=0
+        dl = 0
     # l = len(str(row).split())
-    return l
+    return dl
 
 
 tqdm.pandas()
-df_train = apply_and_add_function(df_train,
-                                  word_count,
-                                  'q1words',
-                                  'q2words',
-                                  'q1 word count',
-                                  'q2 word count')
+df_train['word count dif'] = df_train.progress_apply(word_count_diff, axis=1)
+df_test['word count dif'] = df_test.progress_apply(word_count_diff, axis=1)
 
-
-tqdm.pandas()
-df_test = apply_and_add_function(df_test,
-                                 word_count,
-                                 'question1',
-                                 'question2',
-                                 'q1 word count',
-                                 'q2 word count')
 
 print('completed function 1 for train and test')
-
 
 
 ############################
