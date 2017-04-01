@@ -9,18 +9,15 @@ import numpy as np  # linear algebra
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
 
 print('reading training set')
-df_train = pd.read_csv('train.csv.zip',
-						compression='zip',
-						header=0,
-						sep=',',
-						quotechar='"')
-print('reading test set')
+# df_train = pd.read_csv('df_train.csv',
+# 						header=0,
+# 						sep=',',
+# 						quotechar='"')
 
-df_test = pd.read_csv('test.csv.zip',
-						compression='zip',
-						header=0,
-						sep=',',
-						quotechar='"')
+# df_test = pd.read_csv('df_test.csv',
+# 						header=0,
+# 						sep=',',
+# 						quotechar='"')
 
 
 # read test and train from kaggle
